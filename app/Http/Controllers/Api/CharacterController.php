@@ -7,9 +7,24 @@ use App\Http\Resources\CharacterResource;
 use App\Models\Character;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use OpenApi\Attributes as OA;
 
 class CharacterController extends Controller
 {
+    #[OA\Get(
+        path: "/api/characters",
+        summary: "Listar personajes con filtros",
+        tags: ["Personajes"],
+        parameters: [
+            new OA\Parameter(name: "name", in: "query", required: false, schema: new OA\Schema(type: "string")),
+            new OA\Parameter(name: "status", in: "query", required: false, schema: new OA\Schema(type: "string")),
+            new OA\Parameter(name: "species", in: "query", required: false, schema: new OA\Schema(type: "string")),
+            new OA\Parameter(name: "gender", in: "query", required: false, schema: new OA\Schema(type: "string"))
+        ],
+        responses: [
+            new OA\Response(response: 200, description: "Listado paginado de personajes")
+        ]
+    )]
     public function index(Request $request): AnonymousResourceCollection
     {
         $query = Character::with(['origin', 'location', 'episodes']);
@@ -33,6 +48,18 @@ class CharacterController extends Controller
         return CharacterResource::collection($query->paginate(15));
     }
 
+    #[OA\Get(
+        path: "/api/characters/{id}",
+        summary: "Detalle de un personaje",
+        tags: ["Personajes"],
+        parameters: [
+            new OA\Parameter(name: "id", in: "path", required: true, schema: new OA\Schema(type: "integer"))
+        ],
+        responses: [
+            new OA\Response(response: 200, description: "Información detallada del personaje"),
+            new OA\Response(response: 404, description: "Personaje no encontrado")
+        ]
+    )]
     public function show(Character $character): CharacterResource
     {
         $character->load(['origin', 'location', 'episodes']);

@@ -6,9 +6,31 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use OpenApi\Attributes as OA;
 
 class AuthController extends Controller
 {
+    #[OA\Post(
+        path: "/api/auth/register",
+        summary: "Registro de usuario",
+        tags: ["Autenticación"],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                required: ["name", "email", "password", "password_confirmation"],
+                properties: [
+                    new OA\Property(property: "name", type: "string", example: "Francisco"),
+                    new OA\Property(property: "email", type: "string", format: "email", example: "user@example.com"),
+                    new OA\Property(property: "password", type: "string", format: "password", example: "secret123"),
+                    new OA\Property(property: "password_confirmation", type: "string", format: "password", example: "secret123")
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(response: 201, description: "Usuario registrado correctamente"),
+            new OA\Response(response: 422, description: "Error de validación")
+        ]
+    )]
     public function register(Request $request)
     {
         $fields = $request->validate([
@@ -27,6 +49,26 @@ class AuthController extends Controller
 
         return response()->json(['user' => $user, 'token' => $token], 201);
     }
+
+    #[OA\Post(
+        path: "/api/auth/login",
+        summary: "Inicio de sesión",
+        tags: ["Autenticación"],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                required: ["email", "password"],
+                properties: [
+                    new OA\Property(property: "email", type: "string", format: "email", example: "user@example.com"),
+                    new OA\Property(property: "password", type: "string", format: "password", example: "secret123")
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(response: 200, description: "Login correcto con token Bearer"),
+            new OA\Response(response: 401, description: "Credenciales inválidas")
+        ]
+    )]
 
     public function login(Request $request)
     {
