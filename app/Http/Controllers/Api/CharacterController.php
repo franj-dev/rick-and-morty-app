@@ -33,18 +33,6 @@ class CharacterController extends Controller
         return CharacterResource::collection($query->paginate(15));
     }
 
-    #[OA\Get(
-        path: "/api/characters/{id}",
-        summary: "Detalle de un personaje",
-        tags: ["Personajes"],
-        parameters: [
-            new OA\Parameter(name: "id", in: "path", required: true, schema: new OA\Schema(type: "integer"))
-        ],
-        responses: [
-            new OA\Response(response: 200, description: "Información detallada del personaje"),
-            new OA\Response(response: 404, description: "Personaje no encontrado")
-        ]
-    )]
     public function show(Character $character): CharacterResource
     {
         $character->load(['origin', 'location', 'episodes']);
