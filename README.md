@@ -12,7 +12,7 @@ API REST desarrollada en Laravel 11 para la sincronización idempotente de datos
 Clonar el repositorio:
 ```bash
 git clone https://github.com/franj-dev/rick-and-morty-app.git
-cd rmapi <nombre-de-tu-carpeta>
+cd rick-and-morty-app
 ```
 
 Configurar el entorno:
@@ -22,10 +22,9 @@ cp .env.example .env
 
 Iniciar los contenedores Docker:
 ```bash
-./vendor/bin/sail up -d
-
-O directamente con Docker Compose:
 docker compose up -d
+# O si prefieres usar el binario de Sail tras tenerlo listo:
+# ./vendor/bin/sail up -d
 ```
 
 Instalar dependencias, generar clave y ejecutar migraciones:
@@ -61,6 +60,8 @@ Una vez levantado el servidor, la documentación interactiva OpenAPI está dispo
 La suite de pruebas aísla las peticiones HTTP remotas mediante `Http::fake()` para garantizar ejecuciones deterministas sin dependencia del servicio en vivo:
 
 ```bash
+./vendor/bin/sail test
+# O con Docker Compose:
 docker compose exec laravelapp php artisan test
 ```
 
