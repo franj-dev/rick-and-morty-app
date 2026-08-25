@@ -12,7 +12,7 @@ API REST desarrollada en Laravel 11 para la sincronización idempotente de datos
 Clonar el repositorio:
 ```bash
 git clone https://github.com/franj-dev/rick-and-morty-app.git
-cd rmapi
+cd rmapi <nombre-de-tu-carpeta>
 ```
 
 Configurar el entorno:
